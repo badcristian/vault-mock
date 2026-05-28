@@ -22,6 +22,19 @@ Route::prefix('v1')->group(function () {
         ]);
     });
 
+    //    {{vault_v1}}/auth/kerberos/login
+    //    Real Vault validates a SPNEGO ticket from CURLOPT_HTTPAUTH=NEGOTIATE.
+    //    Locally we don't have AD/Kerberos, so just hand back a bootstrap token.
+    Route::post('/auth/kerberos/login', function () {
+        return response()->json([
+            'auth' => [
+                'client_token' => 'kerberos_bootstrap_token_test',
+                'lease_duration' => 23 * 60 * 60,
+                'num_uses' => 0,
+            ],
+        ]);
+    });
+
     //    {{vault_v1}}/auth/approle/role/appauthrole/role-id
     //    {{vault_v1}}/auth/approle/role/appcertrole/role-id
     Route::get('auth/approle/role/{role}/role-id', function (Request $request) {
